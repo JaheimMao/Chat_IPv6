@@ -1,37 +1,41 @@
 # Chat_IPv6
 
-## 功能
+## Features
 
-&ensp; 实现两台主机之间的文本聊天通信，通信在IPv6环境下进行,完成了登录和注册功能、点对点聊天、群聊等功能。
+This project implements text-based chat communication between two hosts in an IPv6 environment. It supports user registration and login, peer-to-peer chat, and group chat functionalities.
 
-## 实现过程
+## Implementation Process
 
-### 基于UDP协议的Socket通信
+### Socket Communication Based on the UDP Protocol
 
-&ensp; UDP是一个无连接协议，传输数据之前源端和终端不建立连接，当它想传送时就简单地去抓取来自应用程序的数据，并尽可能快地把它扔到网络上。  
-&ensp; 通信协议层面主要用到的方法为：
+UDP is a connectionless protocol. Before data transmission, no connection is established between the source and the destination. When it wants to send data, it simply takes the data from the application and throws it onto the network as quickly as possible.
 
-    socket([family[, type[, proto]]])  
-    bind(address: Union[_Address, bytes])  
-    sendto(data, address,)
-    recvfrom(bufsize, flags,)
+The main methods used at the protocol level are:
 
-### SQLite3数据库实现
+```
+socket([family[, type[, proto]]])  
+bind(address: Union[_Address, bytes])  
+sendto(data, address)  
+recvfrom(bufsize, flags)  
+```
 
-&ensp; 在程序设计的过程中需要用到数据库来存储用户的用户名、密码、状态，用户IP地址和端口。在数据库选择的时候，用到的是SQLite3轻量级数据库，方便数据库的迁移等。  
-  
-| 函数名  | 功能    |
-| :----:  | :----: |
-| init(self) |  用来创建和打开数据库  |
-| select_all(self) |用来获取数据库相应表中的所用用户信息|
-|register(self, username, password, ip, port)|注册时调用，用于添加用户信息|
-|search_username(self, username)| 根据用户名查找用户信息|
-|login_success(self, username, ip, port)|登录成功后，更改数据库中的用户状态信息|
-|login_check(self, username, password, ip, port)|登录时用于检查用户名和密码是否正确|
-|logout_success(self, username)|在用户注销登陆时，更改用户的状态|
-|db_close(self)|关闭数据库|  
+### SQLite3 Database
 
-## 运行测试
+During program development, a database is needed to store user information such as usernames, passwords, status, IP addresses, and ports. SQLite3, a lightweight database, is used for easy migration and maintenance.
 
-&ensp; 在两台可以通信的主机上分别进入代码所在目录，分别执行```python3 Client.py```和```python3 Server.py```。客户端可以根据需求实现多开，服务器只能开一个。在开启服务器的同时会打开数据库。  
-&ensp; 根据提示，进行选择，可以实现不同的功能。在点对点聊天中，任意一方发送END，即可关闭聊天，另一方根据提示确认即可。群聊的实现原理类似，运行测试过程也类似。
+| Function Name  | Description    |
+| :------------: | :------------: |
+| `init(self)` | Creates and opens the database |
+| `select_all(self)` | Retrieves all user information from the relevant database table |
+| `register(self, username, password, ip, port)` | Called during registration to add user information |
+| `search_username(self, username)` | Searches for user information by username |
+| `login_success(self, username, ip, port)` | Updates user status upon successful login |
+| `login_check(self, username, password, ip, port)` | Checks username and password during login |
+| `logout_success(self, username)` | Updates user status when logging out |
+| `db_close(self)` | Closes the database |
+
+## Test Procedure
+
+On two hosts that can communicate with each other, navigate to the code directory and run `python3 Client.py` and `python3 Server.py` respectively. Multiple clients can be launched, but only one server should run. Starting the server also opens the database.
+
+Follow the prompts to choose different functionalities. In peer-to-peer chat, either party can send `END` to close the chat; the other party can confirm closure based on the prompt. Group chat works similarly in principle and the test procedure is nearly the same.
